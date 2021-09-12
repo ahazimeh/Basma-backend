@@ -11,11 +11,24 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        return Customer::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
+        $response = Http::asForm()->post("https://www.google.com/recaptcha/api/siteverify", [
+            'secret' => "6LfF8WAcAAAAALQSH5JvqB7sLo2EtMhlgLQr1f3H",
+            'response' => $request->recaptcha,
+            'remoteip' => $request->ip(),
         ]);
+        if ($response["success"] == false) {
+            return;
+        }
+        $customer = new Customer();
+        $customer->name = $request->input('name');
+        $customer->email = $request->input('email');
+        $customer->password = $request->input('password');
+        $is_saved = $customer->save();
+        error_log($is_saved);
+        if ($is_saved) {
+            return true;
+        }
+
     }
 
     public function login(Request $request)
