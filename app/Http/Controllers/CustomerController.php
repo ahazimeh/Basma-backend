@@ -38,19 +38,19 @@ class CustomerController extends Controller
 
     public function chart()
     {
-        $year = Customer::where('created_at', '>', \DB::raw('DATE_SUB(NOW(),INTERVAL 1 YEAR)'))->get();
+        $year = Customer::where('created_at', '>', \DB::raw('select now() - INTERVAL 1 YEAR'))->get();
         $yearCount = $year->count();
 
-        $threeMonths = Customer::where('created_at', '>', \DB::raw('DATE_SUB(NOW(),INTERVAL 3 MONTH)'))->get();
+        $threeMonths = Customer::where('created_at', '>', \DB::raw('select now() - INTERVAL 3 MONTH'))->get();
         $threeMonthsCount = $threeMonths->count();
 
-        $month = Customer::where('created_at', '>', \DB::raw('DATE_SUB(NOW(),INTERVAL 1 MONTH)'))->get();
+        $month = Customer::where('created_at', '>', \DB::raw('select now() - INTERVAL 1 MONTH'))->get();
         $monthCount = $month->count();
 
-        $week = Customer::where('created_at', '>', \DB::raw('DATE_SUB(NOW(),INTERVAL 1 WEEK)'))->get();
+        $week = Customer::where('created_at', '>', \DB::raw('select now() - INTERVAL 1 WEEK'))->get();
         $weekCount = $week->count();
 
-        $day = Customer::where('created_at', '>', \DB::raw('DATE_SUB(NOW(),INTERVAL 1 DAY)'))->get();
+        $day = Customer::where('created_at', '>', \DB::raw('select now() - INTERVAL 1 DAY'))->get();
         $dayCount = $day->count();
         return [$yearCount / 365, $threeMonthsCount / 90, $monthCount / 30, $weekCount / 7, $dayCount];
     }
