@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -38,19 +39,19 @@ class CustomerController extends Controller
 
     public function chart()
     {
-        $year = Customer::where('created_at', '>', \DB::raw('select now() - INTERVAL 1 YEAR'))->get();
+        $year = Customer::where('created_at', '>', Carbon::now()->subYear(1))->get();
         $yearCount = $year->count();
 
-        $threeMonths = Customer::where('created_at', '>', \DB::raw('select now() - INTERVAL 3 MONTH'))->get();
+        $threeMonths = Customer::where('created_at', '>', Carbon::now()->subMonth(3))->get();
         $threeMonthsCount = $threeMonths->count();
 
-        $month = Customer::where('created_at', '>', \DB::raw('select now() - INTERVAL 1 MONTH'))->get();
+        $month = Customer::where('created_at', '>', Carbon::now()->subMonth(1))->get();
         $monthCount = $month->count();
 
-        $week = Customer::where('created_at', '>', \DB::raw('select now() - INTERVAL 1 WEEK'))->get();
+        $week = Customer::where('created_at', '>', Carbon::now()->subWeek(1))->get();
         $weekCount = $week->count();
 
-        $day = Customer::where('created_at', '>', \DB::raw('select now() - INTERVAL 1 DAY'))->get();
+        $day = Customer::where('created_at', '>', Carbon::now()->today()->subDay(1))->get();
         $dayCount = $day->count();
         return [$yearCount / 365, $threeMonthsCount / 90, $monthCount / 30, $weekCount / 7, $dayCount];
     }
